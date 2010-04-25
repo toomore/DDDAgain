@@ -6,7 +6,8 @@ from google.appengine.ext.webapp.util import run_wsgi_app
 
 from google.appengine.api import urlfetch
 
-import feedparser,urllib2,md5
+import urllib2,md5
+import feedparser,datamodel
 
 
 class readRss:
@@ -15,6 +16,7 @@ class readRss:
     self.result = urllib2.urlopen(url)
     self.etree = feedparser.parse(self.result)
 
+############## webapp Models ###################
 class MainPage(webapp.RequestHandler):
   def get(self):
     a = readRss('http://twitter.com/statuses/user_timeline/12717952.rss').etree
@@ -32,6 +34,22 @@ class MainPage(webapp.RequestHandler):
       self.response.out.write( '%s - %s' % (rsshash.hexdigest(),rsscon) )
       self.response.out.write('<br>')
 
+'''
+class indata(webapp.RequestHandler):
+  def get(self):
+
+    ### Input the Plurk API
+    #a = datamodel.apikey
+    #a(pkey = 'xxx').put()
+
+    ### Get the Plurk APl
+    #q = a.all()
+    #self.response.out.write(q[0].pkey)
+
+    ### Input User ID/PWD
+    #b = datamodel.userdata
+    #b(key_name = 'xxx',password = 'xxx').put()
+'''
 
 ############## main Models ###################
 def main():

@@ -1,5 +1,5 @@
-application: twitter2plurk
-version: t2p-1
+application: x-again
+version: xa1
 runtime: python
 api_version: 1
 
