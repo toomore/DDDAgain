@@ -13,26 +13,37 @@ import feedparser,datamodel
 class readRss:
   def __init__(self,url):
     self.url = url;
-    self.result = urllib2.urlopen(url)
-    self.etree = feedparser.parse(self.result)
+    #self.result = urllib2.urlopen(url)
+    self.result = urlfetch.fetch(url)
+    #self.etree = feedparser.parse(self.result)
+    self.etree = feedparser.parse(self.result.content)
+    self.hcode = self.result.status_code
+    self.headers = self.result.headers
 
 ############## webapp Models ###################
 class MainPage(webapp.RequestHandler):
   def get(self):
-    a = readRss('http://twitter.com/statuses/user_timeline/12717952.rss').etree
-    #a = readRss('http://feedparser.org/docs/examples/rss20.xml').etree
+    RR = readRss('http://twitter.com/statuses/user_timeline/12717952.rss')
+    a = RR.etree
 
     self.response.out.write('Hello, webapp World!<br>')
 
     name = a.channel.title.split(' ')
+    twies = datamodel.twies
 
     for b in a.entries:
       rsscon = (b.title[(len(name[2])+2):]).encode('utf-8')
       rsshash = md5.new()
       rsshash.update(rsscon)
+      if twies.get_by_key_name(rsshash.hexdigest()):
+        pass
+      else:
+        twies(key_name = rsshash.hexdigest(), content = rsscon.decode('utf-8'), posted = False).put()
 
       self.response.out.write( '%s - %s' % (rsshash.hexdigest(),rsscon) )
       self.response.out.write('<br>')
+
+    self.response.out.write('<br>')
 
 '''
 class indata(webapp.RequestHandler):
