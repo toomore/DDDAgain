@@ -1,5 +1,5 @@
 application: x-again
-version: xa1
+version: xaxmpp
 runtime: python
 api_version: 1
 
@@ -20,6 +20,9 @@ handlers:
   script: main.py
   #secure: always
   #login: admin
+
+inbound_services:
+- xmpp_message
 
 admin_console:
   pages:

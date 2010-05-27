@@ -3,10 +3,11 @@
 
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
+from google.appengine.api import xmpp
 
 from google.appengine.api import urlfetch
 
-import urllib2,md5
+import urllib2,md5,logging
 import feedparser,datamodel
 
 
@@ -62,12 +63,25 @@ class indata(webapp.RequestHandler):
     #b(key_name = 'xxx',password = 'xxx').put()
 '''
 
+############## webapp Models ###################
+class xmpp_page(webapp.RequestHandler):
+  def get(self):
+    xmpp.send_invite('toomore0929@gmail.com','x-again@appspot.com')
+
+class xmpp_pagex(webapp.RequestHandler):
+  def post(self):
+    msg = xmpp.Message(self.request.POST)
+    msg.reply(msg.body)
+    logging.info(self.request.POST)
+
 ############## main Models ###################
 def main():
   """ Start up. """
   application = webapp.WSGIApplication(
                                       [
-                                        ('/', MainPage)
+                                        ('/', MainPage),
+                                        ('/chat/', xmpp_page),
+                                        ('/_ah/xmpp/message/chat/', xmpp_pagex)
                                       ],debug=True)
   run_wsgi_app(application)
 
