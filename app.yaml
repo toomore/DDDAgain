@@ -1,5 +1,5 @@
 application: x-again
-version: xa1
+version: uni
 runtime: python
 api_version: 1
 
@@ -18,8 +18,8 @@ handlers:
 ## Main WSGI
 - url: .*
   script: main.py
-  #secure: always
-  #login: admin
+  secure: always
+  login: admin
 
 admin_console:
   pages:

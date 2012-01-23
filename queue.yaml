@@ -1,0 +1,7 @@
+queue:
+- name: default
+  rate: 1/s
+  max_concurrent_requests: 5
+  retry_parameters:
+    task_age_limit: 7d
+

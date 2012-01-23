@@ -13,6 +13,12 @@ class userdata(db.Model):
       user id as a key_name """
   password = db.StringProperty()
 
+class plurkid(db.Model):
+  """ Plurk user account """
+  user = db.UserProperty(auto_current_user_add=True)
+  uid = db.StringProperty()
+  upwd = db.StringProperty()
+
 class twies(db.Model):
   """ Save twitters
       unicode as a key_name """
