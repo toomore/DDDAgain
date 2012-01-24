@@ -8,7 +8,7 @@ from google.appengine.api.taskqueue import Task
 from google.appengine.api import urlfetch
 import simplejson as json
 import urllib2,md5
-#import feedparser,datamodel
+import feedparser
 import plurklib
 from datamodel import plurkid
 from datamodel import apikey
@@ -71,26 +71,30 @@ class addplurkacc(webapp.RequestHandler):
 
 ############## webapp Models ###################
 ##### OLD #####
-class MainPage(webapp.RequestHandler):
+class rssfetch(webapp.RequestHandler):
   def get(self):
-    RR = readRss('http://twitter.com/statuses/user_timeline/12717952.rss')
+    RR = readRss('http://feeds.feedburner.com/toomore/CDwS')
     a = RR.etree
 
     self.response.out.write('Hello, webapp World!<br>')
 
     name = a.channel.title.split(' ')
-    twies = datamodel.twies
+    #twies = datamodel.twies
 
     for b in a.entries:
-      rsscon = (b.title[(len(name[2])+2):]).encode('utf-8')
+      #self.response.out.write(b.items())
+      rsscon = (b.title).encode('utf-8')
       rsshash = md5.new()
       rsshash.update(rsscon)
+      '''
       if twies.get_by_key_name(rsshash.hexdigest()):
         pass
       else:
         twies(key_name = rsshash.hexdigest(), content = rsscon.decode('utf-8'), posted = False).put()
-
+      '''
       self.response.out.write( '%s - %s' % (rsshash.hexdigest(),rsscon) )
+      self.response.out.write((b.link).encode('utf-8'))
+      self.response.out.write('<br>')
       self.response.out.write('<br>')
 
     self.response.out.write('<br>')
@@ -119,7 +123,8 @@ def main():
                                       [
                                         ('/', index),
                                         ('/addplurkacc', addplurkacc),
-                                        ('/taskpostplurk', taskpostplurk)
+                                        ('/taskpostplurk', taskpostplurk),
+                                        ('/rssfetch', rssfetch)
                                       ],debug=True)
   run_wsgi_app(application)
 
